@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenClaw // Debate Module</title>
+    <title>SCIS OpenClaw Debate - Mr. Olguin's Class</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,19 +22,19 @@
             font-family: 'JetBrains Mono', monospace;
         }
 
-        /* Custom Scrollbar */
+        /* Custom Scrollbar - Light Theme */
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.5);
+            background: rgba(226, 232, 240, 0.5); /* slate-200 */
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(71, 85, 105, 0.8);
+            background: rgba(148, 163, 184, 0.8); /* slate-400 */
             border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(94, 114, 141, 1);
+            background: rgba(100, 116, 139, 1); /* slate-500 */
         }
 
         .cursor-wait {
@@ -42,13 +42,13 @@
         }
     </style>
 </head>
-<body class="bg-black text-slate-300 overflow-hidden">
+<body class="bg-slate-200 text-slate-800 overflow-hidden">
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- Icons (Inlined to prevent CDN errors) ---
+        // --- Icons (Inlined) ---
         const IconWrapper = ({ children, color = "currentColor", size = 24, className = "" }) => (
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,6 +80,8 @@
         const HardDrive = (props) => <IconWrapper {...props}><line x1="22" x2="2" y1="12" y2="12" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /><line x1="6" x2="6.01" y1="16" y2="16" /><line x1="10" x2="10.01" y1="16" y2="16" /></IconWrapper>;
         const X = (props) => <IconWrapper {...props}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></IconWrapper>;
         const Key = (props) => <IconWrapper {...props}><circle cx="7.5" cy="15.5" r="5.5" /><path d="m21 2-9.6 9.6" /><path d="m15.5 7.5 3 3L22 7l-3-3" /></IconWrapper>;
+        const Search = (props) => <IconWrapper {...props}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></IconWrapper>;
+        const MonitorIcon = (props) => <IconWrapper {...props}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></IconWrapper>;
 
         // --- Utility Components ---
 
@@ -87,7 +89,7 @@
             const [displayedText, setDisplayedText] = useState("");
             
             useEffect(() => {
-                setDisplayedText(""); // Reset when text changes
+                setDisplayedText(""); 
                 let i = 0;
                 const interval = setInterval(() => {
                     setDisplayedText((prev) => prev + text.charAt(i));
@@ -107,13 +109,13 @@
             <span className="inline-block w-2.5 h-5 bg-current ml-1 animate-pulse align-middle"></span>
         );
 
-        const ProgressBar = ({ label, value, colorClass = "bg-green-500" }) => (
+        const ProgressBar = ({ label, value, colorClass = "bg-blue-600" }) => (
             <div className="mb-2 font-mono text-xs">
-                <div className="flex justify-between mb-1">
+                <div className="flex justify-between mb-1 text-slate-600 font-bold">
                     <span>{label}</span>
                     <span>{value}%</span>
                 </div>
-                <div className="w-full bg-slate-800 h-2 rounded-sm overflow-hidden">
+                <div className="w-full bg-slate-200 h-2 rounded-sm overflow-hidden">
                     <div 
                         className={`h-full ${colorClass} transition-all duration-1000 ease-out`} 
                         style={{ width: `${value}%` }}
@@ -129,10 +131,11 @@
             const [error, setError] = useState(false);
             const [shake, setShake] = useState(false);
 
-            // Passwords configuration
+            // Added 'MODERATOR' password
             const passwords = {
                 A: 'agent',
-                B: 'human'
+                B: 'human',
+                MODERATOR: 'admin' 
             };
 
             const handleSubmit = (e) => {
@@ -151,14 +154,14 @@
             };
 
             return (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-950/90 backdrop-blur-sm p-4">
-                    <div className={`w-full max-w-md bg-slate-900 border ${error ? 'border-red-500' : 'border-slate-600'} shadow-2xl relative p-6 transition-all duration-100 ${shake ? 'translate-x-1' : ''}`}>
-                        <button onClick={onCancel} className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors">
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-slate-100/90 backdrop-blur-sm p-4">
+                    <div className={`w-full max-w-md bg-white border-2 ${error ? 'border-red-500' : 'border-slate-300'} shadow-2xl relative p-6 transition-all duration-100 ${shake ? 'translate-x-1' : ''}`}>
+                        <button onClick={onCancel} className="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition-colors">
                             <X size={20} />
                         </button>
                         
-                        <div className="flex items-center gap-3 mb-6 text-slate-100">
-                            <div className={`p-2 rounded bg-slate-800 ${error ? 'text-red-500' : 'text-slate-300'}`}>
+                        <div className="flex items-center gap-3 mb-6 text-slate-800">
+                            <div className={`p-2 rounded bg-slate-100 ${error ? 'text-red-500' : 'text-blue-600'}`}>
                                 <Lock size={24} />
                             </div>
                             <div>
@@ -169,32 +172,32 @@
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
-                                <label className="text-xs font-mono text-slate-400">ENTER PASSCODE:</label>
+                                <label className="text-xs font-mono font-bold text-slate-600">ENTER PASSCODE:</label>
                                 <div className="relative">
                                     <input 
                                         autoFocus
                                         type="password" 
                                         value={input}
                                         onChange={(e) => setInput(e.target.value)}
-                                        className={`w-full bg-black border ${error ? 'border-red-500 text-red-500' : 'border-slate-700 text-green-400'} font-mono p-3 pl-10 focus:outline-none focus:border-white transition-colors`}
+                                        className={`w-full bg-slate-50 border ${error ? 'border-red-500 text-red-600' : 'border-slate-300 text-slate-800'} font-mono p-3 pl-10 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors`}
                                         placeholder="••••••••"
                                     />
-                                    <Key className="absolute left-3 top-3.5 w-4 h-4 text-slate-600" />
+                                    <Key className="absolute left-3 top-3.5 w-4 h-4 text-slate-400" />
                                 </div>
                             </div>
 
                             {error && (
-                                <div className="text-red-500 text-xs font-mono animate-pulse flex items-center">
+                                <div className="text-red-600 text-xs font-mono font-bold animate-pulse flex items-center">
                                     <AlertTriangle className="w-3 h-3 mr-1" />
                                     ACCESS DENIED. INCORRECT PASSCODE.
                                 </div>
                             )}
 
                             <div className="pt-2 flex justify-between items-center">
-                                <span className="text-[10px] text-slate-600 font-mono">ATTEMPTS LOGGED</span>
+                                <span className="text-[10px] text-slate-400 font-mono font-bold">ATTEMPTS LOGGED</span>
                                 <button 
                                     type="submit"
-                                    className="bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs px-4 py-2 border border-slate-600 transition-colors uppercase"
+                                    className="bg-blue-600 hover:bg-blue-700 text-white font-mono font-bold text-xs px-4 py-2 transition-colors uppercase shadow-sm"
                                 >
                                     Verify Credentials
                                 </button>
@@ -205,64 +208,69 @@
             );
         };
 
-        // 1. Landing View
         const LandingView = ({ onSelectSide }) => {
             const [bootSequence, setBootSequence] = useState(true);
 
             useEffect(() => {
-                const timer = setTimeout(() => setBootSequence(false), 2200);
+                const timer = setTimeout(() => setBootSequence(false), 2000);
                 return () => clearTimeout(timer);
             }, []);
 
             if (bootSequence) {
                 return (
-                    <div className="flex flex-col h-full p-8 font-mono text-green-500 space-y-2">
-                        <div>&gt; INITIALIZING CORE... <span className="text-white">OK</span></div>
-                        <div className="delay-100">&gt; LOADING MODULES... <span className="text-white">OK</span></div>
-                        <div className="delay-200">&gt; CONNECTING TO OPENCLAW NETWORK... <span className="text-white">ESTABLISHED</span></div>
-                        <div className="delay-300">&gt; DECRYPTING DEBATE PARAMETERS...</div>
-                        <div className="mt-4 animate-pulse">&gt; SYSTEM READY_</div>
+                    <div className="flex flex-col h-full p-8 font-mono text-emerald-600 space-y-2 bg-white">
+                        <div>&gt; INITIALIZING SCIS SECURE SERVER... <span className="text-slate-800 font-bold">OK</span></div>
+                        <div className="delay-100">&gt; AUTHENTICATING MR. OLGUIN'S SENIOR CLASS... <span className="text-slate-800 font-bold">OK</span></div>
+                        <div className="delay-200">&gt; CONNECTING TO OPENCLAW NETWORK... <span className="text-slate-800 font-bold">ESTABLISHED</span></div>
+                        <div className="delay-300">&gt; APPLYING LIGHT_THEME_PROJECTION... <span className="text-slate-800 font-bold">DONE</span></div>
+                        <div className="mt-4 animate-pulse font-bold text-blue-600">&gt; SYSTEM READY_</div>
                     </div>
                 );
             }
 
             return (
-                <div className="flex flex-col h-full font-mono relative overflow-hidden">
-                    {/* Background Matrix-like effect (simplified) */}
-                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,22,29,0.9),rgba(18,22,29,0.9)),url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
+                <div className="flex flex-col h-full font-mono relative overflow-hidden bg-white">
+                    <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-50 pointer-events-none"></div>
 
-                    <div className="z-10 flex flex-col items-center justify-center h-full p-6 space-y-12">
+                    <div className="z-10 flex flex-col items-center justify-center h-full p-6 space-y-6">
                         <div className="text-center space-y-4">
-                            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-cyan-400 tracking-tighter">
+                            <div className="text-slate-500 font-bold tracking-widest text-sm mb-2">SCIS SENIOR DEBATE // MR. OLGUIN</div>
+                            <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 tracking-tighter">
                                 OPENCLAW // DEBATE
                             </h1>
-                            <p className="text-green-500/80 text-sm md:text-base max-w-2xl mx-auto border-l-2 border-green-500 pl-4 py-2 bg-green-900/10">
+                            <p className="text-slate-600 font-bold text-sm md:text-base max-w-2xl mx-auto border-l-4 border-blue-500 pl-4 py-2 bg-slate-50">
                                 <TypingText text="SUBJECT: THE AGE OF AUTONOMY. SELECT YOUR PROTOCOL." speed={20} />
                             </p>
+                        </div>
+
+                        {/* Research Encouragement Banner */}
+                        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-xs md:text-sm font-bold flex items-center max-w-4xl shadow-sm">
+                            <Search className="w-5 h-5 mr-3 flex-shrink-0 text-yellow-600" />
+                            <span>ATTENTION SCIS SENIORS: The parameters provided within are merely a baseline. You are expected by Mr. Olguin to conduct independent research, cite modern examples, and expand your arguments to secure victory.</span>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
                             {/* Side A Card */}
                             <button 
                                 onClick={() => onSelectSide('A')}
-                                className="group relative border border-cyan-500/30 bg-slate-900/50 hover:bg-cyan-900/20 p-8 text-left transition-all duration-300 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+                                className="group relative border-2 border-slate-200 bg-white hover:bg-slate-50 p-8 text-left transition-all duration-300 hover:border-blue-400 hover:shadow-lg"
                             >
-                                <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                                 <div className="flex items-center justify-between mb-6">
-                                    <span className="text-4xl font-bold text-cyan-400">SIDE A</span>
-                                    <Cpu className="w-10 h-10 text-cyan-400 group-hover:rotate-90 transition-transform duration-500" />
+                                    <span className="text-4xl font-black text-slate-800 group-hover:text-blue-700 transition-colors">SIDE A</span>
+                                    <Cpu className="w-10 h-10 text-blue-600 group-hover:rotate-90 transition-transform duration-500" />
                                 </div>
                                 <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="text-xl text-white font-bold tracking-wide">THE INTEGRATIONISTS</h3>
-                                    <Lock className="w-3 h-3 text-slate-500 group-hover:text-cyan-400 transition-colors" />
+                                    <h3 className="text-xl text-slate-900 font-bold tracking-wide">THE INTEGRATIONISTS</h3>
+                                    <Lock className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
                                 </div>
-                                <p className="text-cyan-200/60 text-sm mb-6">"The Steam Engine of the Mind."</p>
-                                <ul className="space-y-2 text-sm text-cyan-100/80 mb-6">
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Maximize Autonomy</li>
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Agentic Economy</li>
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Zero Marginal Cost</li>
+                                <p className="text-slate-600 font-medium text-sm mb-6">"The Steam Engine of the Mind."</p>
+                                <ul className="space-y-2 text-sm text-slate-700 font-medium mb-6">
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-blue-500" /> Maximize Autonomy</li>
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-blue-500" /> Agentic Economy</li>
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-blue-500" /> Zero Marginal Cost</li>
                                 </ul>
-                                <div className="inline-block px-3 py-1 border border-cyan-500/50 text-cyan-400 text-xs uppercase tracking-widest group-hover:bg-cyan-500 group-hover:text-black transition-colors">
+                                <div className="inline-block px-3 py-1.5 border border-slate-300 text-slate-500 font-bold text-xs uppercase tracking-widest group-hover:bg-blue-600 group-hover:border-blue-600 group-hover:text-white transition-colors">
                                     Initialize Protocol_A [LOCKED]
                                 </div>
                             </button>
@@ -270,34 +278,42 @@
                             {/* Side B Card */}
                             <button 
                                 onClick={() => onSelectSide('B')}
-                                className="group relative border border-amber-500/30 bg-slate-900/50 hover:bg-amber-900/20 p-8 text-left transition-all duration-300 hover:border-amber-400 hover:shadow-[0_0_20px_rgba(251,191,36,0.2)]"
+                                className="group relative border-2 border-slate-200 bg-white hover:bg-slate-50 p-8 text-left transition-all duration-300 hover:border-orange-500 hover:shadow-lg"
                             >
-                                <div className="absolute top-0 left-0 w-full h-1 bg-amber-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                                <div className="absolute top-0 left-0 w-full h-1.5 bg-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
                                 <div className="flex items-center justify-between mb-6">
-                                    <span className="text-4xl font-bold text-amber-500">SIDE B</span>
-                                    <Shield className="w-10 h-10 text-amber-500 group-hover:scale-110 transition-transform duration-300" />
+                                    <span className="text-4xl font-black text-slate-800 group-hover:text-orange-600 transition-colors">SIDE B</span>
+                                    <Shield className="w-10 h-10 text-orange-500 group-hover:scale-110 transition-transform duration-300" />
                                 </div>
                                 <div className="flex items-center gap-2 mb-2">
-                                    <h3 className="text-xl text-white font-bold tracking-wide">THE PROTECTIONISTS</h3>
-                                    <Lock className="w-3 h-3 text-slate-500 group-hover:text-amber-400 transition-colors" />
+                                    <h3 className="text-xl text-slate-900 font-bold tracking-wide">THE PROTECTIONISTS</h3>
+                                    <Lock className="w-4 h-4 text-slate-400 group-hover:text-orange-500 transition-colors" />
                                 </div>
-                                <p className="text-amber-200/60 text-sm mb-6">"Containment of Shadow AI."</p>
-                                <ul className="space-y-2 text-sm text-amber-100/80 mb-6">
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Security Sovereignty</li>
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Prevent "God Mode"</li>
-                                    <li className="flex items-center"><ChevronRight className="w-3 h-3 mr-2" /> Human Agency</li>
+                                <p className="text-slate-600 font-medium text-sm mb-6">"Containment of Shadow AI."</p>
+                                <ul className="space-y-2 text-sm text-slate-700 font-medium mb-6">
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-orange-500" /> Security Sovereignty</li>
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-orange-500" /> Prevent "God Mode"</li>
+                                    <li className="flex items-center"><ChevronRight className="w-4 h-4 mr-2 text-orange-500" /> Human Agency</li>
                                 </ul>
-                                <div className="inline-block px-3 py-1 border border-amber-500/50 text-amber-400 text-xs uppercase tracking-widest group-hover:bg-amber-500 group-hover:text-black transition-colors">
+                                <div className="inline-block px-3 py-1.5 border border-slate-300 text-slate-500 font-bold text-xs uppercase tracking-widest group-hover:bg-orange-500 group-hover:border-orange-500 group-hover:text-white transition-colors">
                                     Initialize Protocol_B [LOCKED]
                                 </div>
                             </button>
                         </div>
+
+                        {/* Moderator Button */}
+                        <button 
+                            onClick={() => onSelectSide('MODERATOR')}
+                            className="mt-4 flex items-center px-4 py-2 border-2 border-slate-300 bg-slate-100 text-slate-600 font-bold text-xs hover:bg-emerald-50 hover:border-emerald-500 hover:text-emerald-700 transition-all rounded"
+                        >
+                            <MonitorIcon className="w-4 h-4 mr-2" />
+                            ACCESS MODERATOR HUB
+                        </button>
                     </div>
                 </div>
             );
         };
 
-        // 2. Details View (Reusable for both sides)
         const DetailsView = ({ side, data, onBack }) => {
             const [activeTab, setActiveTab] = useState('personal');
             const [executingAction, setExecutingAction] = useState(false);
@@ -305,20 +321,26 @@
 
             const theme = side === 'A' 
                 ? { 
-                    main: 'cyan', 
-                    bg: 'bg-cyan-950', 
-                    text: 'text-cyan-400', 
-                    border: 'border-cyan-500/30',
-                    hover: 'hover:bg-cyan-500/10',
-                    accent: 'bg-cyan-500'
+                    main: 'blue', 
+                    bg: 'bg-blue-50', 
+                    text: 'text-blue-800', 
+                    border: 'border-blue-200',
+                    tabActiveBorder: 'border-blue-600',
+                    tabActiveText: 'text-blue-700',
+                    accent: 'bg-blue-600',
+                    accentText: 'text-blue-600',
+                    lightBg: 'bg-white'
                 } 
                 : { 
-                    main: 'amber', 
-                    bg: 'bg-amber-950', 
-                    text: 'text-amber-500', 
-                    border: 'border-amber-500/30',
-                    hover: 'hover:bg-amber-500/10',
-                    accent: 'bg-amber-500'
+                    main: 'orange', 
+                    bg: 'bg-orange-50', 
+                    text: 'text-orange-800', 
+                    border: 'border-orange-200',
+                    tabActiveBorder: 'border-orange-500',
+                    tabActiveText: 'text-orange-700',
+                    accent: 'bg-orange-500',
+                    accentText: 'text-orange-600',
+                    lightBg: 'bg-white'
                 };
 
             const handleAction = () => {
@@ -336,56 +358,62 @@
             ];
 
             return (
-                <div className={`flex flex-col h-full font-mono p-4 md:p-8 ${side === 'A' ? 'bg-slate-900/50' : 'bg-slate-900/50'}`}>
+                <div className={`flex flex-col h-full font-mono p-4 md:p-8 bg-white`}>
                     
                     {/* Header */}
-                    <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-700">
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
                         <div>
-                            <h2 className={`text-2xl font-bold ${theme.text} flex items-center`}>
+                            <h2 className={`text-2xl font-black ${theme.text} flex items-center tracking-tight`}>
                                 {side === 'A' ? <Unlock className="mr-3 w-6 h-6" /> : <Lock className="mr-3 w-6 h-6" />}
                                 PROTOCOL {side}: {data.title}
                             </h2>
-                            <p className="text-slate-400 text-xs mt-1">STATUS: {side === 'A' ? 'UNRESTRICTED' : 'RESTRICTED'} // SESSION: AUTHENTICATED</p>
+                            <p className="text-slate-500 font-bold text-xs mt-1">STATUS: {side === 'A' ? 'UNRESTRICTED' : 'RESTRICTED'} // SESSION: AUTHENTICATED</p>
                         </div>
                         <button 
                             onClick={onBack}
-                            className="text-slate-500 hover:text-white border border-slate-700 hover:border-white px-4 py-2 text-xs transition-all"
+                            className="text-slate-500 font-bold hover:text-slate-900 border-2 border-slate-200 hover:border-slate-400 bg-slate-50 px-4 py-2 text-xs transition-all"
                         >
                             &lt; TERMINATE_SESSION
                         </button>
                     </div>
 
-                    <div className="flex flex-col md:flex-row gap-6 h-full overflow-hidden">
+                    <div className="flex flex-col md:flex-row gap-8 h-full overflow-hidden">
                         
-                        {/* Sidebar / Core Philosophy */}
-                        <div className={`md:w-1/3 flex flex-col gap-6 ${theme.border} border-r pr-6 overflow-y-auto`}>
-                            <div className={`p-4 ${theme.bg} border ${theme.border} rounded-sm`}>
-                                <h3 className="text-white font-bold mb-2 text-sm uppercase">Core Philosophy</h3>
-                                <p className="text-slate-300 text-sm leading-relaxed">{data.philosophy}</p>
+                        {/* Sidebar */}
+                        <div className={`md:w-1/3 flex flex-col gap-6 ${theme.border} border-r-2 pr-6 overflow-y-auto custom-scrollbar`}>
+                            <div className={`p-5 ${theme.bg} border-2 ${theme.border} rounded-sm shadow-sm`}>
+                                <h3 className={`font-black mb-3 text-sm uppercase tracking-wider ${theme.text}`}>Core Philosophy</h3>
+                                <p className="text-slate-700 font-medium text-sm leading-relaxed">{data.philosophy}</p>
                             </div>
 
                             <div className="space-y-4">
-                                <h3 className="text-white font-bold text-sm uppercase flex items-center">
+                                <h3 className={`font-black text-sm uppercase flex items-center ${theme.text}`}>
                                     <HardDrive className="w-4 h-4 mr-2" /> Research Database
                                 </h3>
-                                <ul className="text-xs text-slate-400 space-y-2">
+                                
+                                <div className="bg-slate-50 border border-slate-200 p-3 mb-2 rounded-sm text-xs font-bold text-slate-600 flex items-start">
+                                    <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0 text-slate-500" />
+                                    <span>SYSTEM NOTE: Expand parameters. Conduct independent queries to strengthen your protocol.</span>
+                                </div>
+
+                                <ul className="text-xs font-medium text-slate-600 space-y-3">
                                     {data.researchTerms.map((term, idx) => (
-                                        <li key={idx} className="flex items-start">
-                                            <span className={`mr-2 ${theme.text}`}>&gt;</span> 
-                                            <span className="hover:text-white cursor-pointer transition-colors">"{term}"</span>
+                                        <li key={idx} className="flex items-start bg-white p-2 border border-slate-100 shadow-sm hover:border-slate-300 transition-colors">
+                                            <span className={`mr-2 font-bold ${theme.accentText}`}>&gt;</span> 
+                                            <span className="text-slate-700">{term}</span>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
 
-                            <div className="mt-auto pt-6">
+                            <div className="mt-auto pt-6 pb-2">
                                 <button 
                                     onClick={handleAction}
                                     disabled={executingAction}
-                                    className={`w-full py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+                                    className={`w-full py-3 text-xs font-black uppercase tracking-widest transition-all shadow-md ${
                                         executingAction 
-                                            ? 'bg-slate-800 text-slate-500 cursor-wait' 
-                                            : `${theme.accent} text-black hover:opacity-90 active:scale-95`
+                                            ? 'bg-slate-200 text-slate-500 cursor-wait' 
+                                            : `${theme.accent} text-white hover:opacity-90 active:scale-95`
                                     }`}
                                 >
                                     {executingAction ? (
@@ -400,7 +428,7 @@
                         {/* Main Content Area */}
                         <div className="md:w-2/3 flex flex-col">
                             {/* Tabs */}
-                            <div className="flex border-b border-slate-700 mb-6">
+                            <div className="flex border-b-2 border-slate-200 mb-6">
                                 {tabs.map((tab) => {
                                     const Icon = tab.icon;
                                     const isActive = activeTab === tab.id;
@@ -408,13 +436,13 @@
                                         <button
                                             key={tab.id}
                                             onClick={() => setActiveTab(tab.id)}
-                                            className={`flex items-center px-4 py-2 text-xs md:text-sm transition-colors border-b-2 ${
+                                            className={`flex items-center px-5 py-3 text-xs md:text-sm font-bold transition-all border-b-4 -mb-[2px] ${
                                                 isActive 
-                                                    ? `border-${theme.main}-500 text-white bg-slate-800` 
-                                                    : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-slate-800/50'
+                                                    ? `${theme.tabActiveBorder} ${theme.tabActiveText} bg-slate-50` 
+                                                    : 'border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-50'
                                             }`}
                                         >
-                                            <Icon className="w-3 h-3 mr-2" />
+                                            <Icon className="w-4 h-4 mr-2" />
                                             {tab.label}
                                         </button>
                                     );
@@ -422,34 +450,34 @@
                             </div>
 
                             {/* Tab Content */}
-                            <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar pb-6">
                                 <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                    <h3 className={`text-xl font-bold text-white mb-2`}>{data.points[activeTab].title}</h3>
-                                    <div className={`h-0.5 w-12 ${theme.accent} mb-6`}></div>
+                                    <h3 className={`text-2xl font-black text-slate-900 mb-2`}>{data.points[activeTab].title}</h3>
+                                    <div className={`h-1 w-16 ${theme.accent} mb-8`}></div>
                                     
                                     <div className="space-y-6">
-                                        <div className="bg-slate-900/40 p-5 border border-slate-700 rounded-sm">
-                                            <h4 className={`text-xs font-bold ${theme.text} mb-2 uppercase`}>Argument Logic</h4>
-                                            <p className="text-slate-300 leading-relaxed text-sm">
+                                        <div className="bg-white p-6 border-2 border-slate-200 shadow-sm rounded-sm">
+                                            <h4 className={`text-xs font-black ${theme.accentText} mb-3 uppercase tracking-wider`}>Argument Logic</h4>
+                                            <p className="text-slate-800 font-medium text-base leading-relaxed">
                                                 {data.points[activeTab].argument}
                                             </p>
                                         </div>
 
-                                        <div className="bg-slate-900/40 p-5 border border-slate-700 rounded-sm">
-                                            <h4 className={`text-xs font-bold ${theme.text} mb-2 uppercase`}>Key Concept</h4>
+                                        <div className={`${theme.bg} p-6 border border-slate-200 shadow-sm rounded-sm`}>
+                                            <h4 className={`text-xs font-black ${theme.accentText} mb-3 uppercase tracking-wider`}>Key Concept</h4>
                                             <div className="flex items-start">
-                                                <div className={`mt-1 w-2 h-2 ${theme.accent} rounded-full mr-3 animate-pulse`}></div>
+                                                <div className={`mt-1.5 w-2 h-2 ${theme.accent} rounded-full mr-3 animate-pulse`}></div>
                                                 <div>
-                                                    <strong className="text-white block mb-1">{data.points[activeTab].conceptTitle}</strong>
-                                                    <p className="text-slate-400 text-sm">{data.points[activeTab].conceptDesc}</p>
+                                                    <strong className={`block mb-1 text-lg font-bold ${theme.text}`}>{data.points[activeTab].conceptTitle}</strong>
+                                                    <p className="text-slate-700 font-medium">{data.points[activeTab].conceptDesc}</p>
                                                 </div>
                                             </div>
                                         </div>
 
                                         {/* Decorative Stats */}
-                                        <div className="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-slate-800">
+                                        <div className="grid grid-cols-2 gap-6 mt-8 pt-8 border-t-2 border-slate-100">
                                             <ProgressBar label="IMPACT PROBABILITY" value={side === 'A' ? 89 : 74} colorClass={theme.accent} />
-                                            <ProgressBar label="SYSTEM LOAD" value={side === 'A' ? 42 : 91} colorClass={side === 'A' ? 'bg-green-500' : 'bg-red-500'} />
+                                            <ProgressBar label="SYSTEM LOAD" value={side === 'A' ? 42 : 91} colorClass={side === 'A' ? 'bg-emerald-500' : 'bg-red-500'} />
                                         </div>
                                     </div>
                                 </div>
@@ -461,6 +489,132 @@
             );
         };
 
+        // --- NEW: Monitor / Moderator View ---
+        const MonitorView = ({ onBack }) => {
+            const [activeStage, setActiveStage] = useState('personal');
+
+            const stages = [
+                { id: 'personal', label: 'Phase 1: Personal', icon: User },
+                { id: 'company', label: 'Phase 2: Company', icon: Building },
+                { id: 'country', label: 'Phase 3: Country', icon: Globe },
+                { id: 'species', label: 'Phase 4: Species', icon: Activity },
+            ];
+
+            const monitorData = {
+                personal: { 
+                    title: "Phase 1: Personal Impact", 
+                    question: "Does AI autonomy liberate human potential or degrade fundamental human skills?",
+                    sideA: { name: "Super-Empowered Individual", concept: "Cognitive Offloading" },
+                    sideB: { name: "Loss of Agency & Privacy", concept: "The 'Wall-E' Effect" }
+                },
+                company: { 
+                    title: "Phase 2: Corporate & Economic", 
+                    question: "Are autonomous agents the ultimate productivity engine or an uncontainable security threat?",
+                    sideA: { name: "The Agentic Economy", concept: "Zero Marginal Cost" },
+                    sideB: { name: "Shadow AI & Security Nightmares", concept: "The Blast Radius" }
+                },
+                country: { 
+                    title: "Phase 3: National Infrastructure", 
+                    question: "Must nations adopt agents to survive, or does adoption create fatal systemic vulnerabilities?",
+                    sideA: { name: "National Competitiveness", concept: "The Skills Gap Solution" },
+                    sideB: { name: "Infrastructure Vulnerability", concept: "Algorithmic Fragility" }
+                },
+                species: { 
+                    title: "Phase 4: Species & Future", 
+                    question: "Can we align hyper-competent agents with human values before they reshape our world?",
+                    sideA: { name: "Solving the Unsolvable", concept: "Evolutionary Acceleration" },
+                    sideB: { name: "The Alignment Problem", concept: "Value Misalignment" }
+                }
+            };
+
+            const currentData = monitorData[activeStage];
+
+            return (
+                <div className="flex flex-col h-full font-mono p-4 md:p-8 bg-slate-100">
+                    
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-slate-300">
+                        <div className="flex items-center">
+                            <MonitorIcon className="w-8 h-8 mr-4 text-emerald-600" />
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-800 tracking-tight">SCIS DEBATE MONITOR_HUB</h2>
+                                <p className="text-emerald-600 font-bold text-xs mt-1 animate-pulse flex items-center">
+                                    <span className="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> MR. OLGUIN'S LIVE TRACKING ACTIVE
+                                </p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={onBack}
+                            className="text-slate-500 font-bold hover:text-slate-900 border-2 border-slate-300 hover:border-slate-500 bg-white px-4 py-2 text-xs transition-all shadow-sm"
+                        >
+                            &lt; EXIT_HUB
+                        </button>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row gap-8 h-full overflow-hidden">
+                        
+                        {/* Sidebar - Stage Selection */}
+                        <div className="md:w-1/4 flex flex-col gap-3 pr-4 border-r-2 border-slate-300 overflow-y-auto">
+                            <h3 className="font-black text-sm text-slate-500 uppercase mb-2">Debate Stages</h3>
+                            {stages.map((stage) => {
+                                const Icon = stage.icon;
+                                const isActive = activeStage === stage.id;
+                                return (
+                                    <button
+                                        key={stage.id}
+                                        onClick={() => setActiveStage(stage.id)}
+                                        className={`flex items-center w-full px-4 py-4 text-left font-bold transition-all border-l-4 shadow-sm ${
+                                            isActive 
+                                                ? 'border-emerald-500 bg-white text-emerald-800 scale-105' 
+                                                : 'border-transparent bg-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-400'
+                                        }`}
+                                    >
+                                        <Icon className={`w-5 h-5 mr-3 ${isActive ? 'text-emerald-500' : 'text-slate-400'}`} />
+                                        {stage.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* Main Content Area - Current Stage View */}
+                        <div className="md:w-3/4 flex flex-col overflow-y-auto pr-4 custom-scrollbar">
+                            <div className="bg-white p-8 border-2 border-slate-300 shadow-md rounded-md animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                
+                                <div className="mb-8 pb-6 border-b-2 border-slate-200 text-center">
+                                    <span className="inline-block px-3 py-1 bg-slate-200 text-slate-600 font-bold text-xs uppercase rounded-full mb-4">Current Focus</span>
+                                    <h3 className="text-3xl font-black text-slate-900 mb-4">{currentData.title}</h3>
+                                    <div className="bg-yellow-50 border border-yellow-200 p-4 rounded inline-block max-w-2xl">
+                                        <p className="text-yellow-800 font-bold text-lg">"{currentData.question}"</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Side A Summary */}
+                                    <div className="bg-blue-50 border-2 border-blue-200 p-6 rounded relative">
+                                        <div className="absolute -top-3 left-4 bg-blue-600 text-white font-bold text-xs px-2 py-1 rounded shadow">SIDE A: INTEGRATION</div>
+                                        <h4 className="text-xl font-black text-blue-900 mt-2 mb-2">{currentData.sideA.name}</h4>
+                                        <p className="text-blue-700 font-bold text-sm bg-white p-2 border border-blue-100 inline-block mt-2">
+                                            Key: {currentData.sideA.concept}
+                                        </p>
+                                    </div>
+
+                                    {/* Side B Summary */}
+                                    <div className="bg-orange-50 border-2 border-orange-200 p-6 rounded relative">
+                                        <div className="absolute -top-3 left-4 bg-orange-500 text-white font-bold text-xs px-2 py-1 rounded shadow">SIDE B: CONTAINMENT</div>
+                                        <h4 className="text-xl font-black text-orange-900 mt-2 mb-2">{currentData.sideB.name}</h4>
+                                        <p className="text-orange-700 font-bold text-sm bg-white p-2 border border-orange-100 inline-block mt-2">
+                                            Key: {currentData.sideB.concept}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            );
+        };
 
         // --- Data Definitions ---
 
@@ -471,30 +625,31 @@
                 "OpenClaw productivity stats 2026",
                 "Zero marginal cost of cognitive labor",
                 "Agentic Economy definition",
-                "AI closing skills gap"
+                "AI closing skills gap",
+                "Economic growth vs AI adoption rates"
             ],
             points: {
                 personal: {
                     title: "The Super-Empowered Individual",
-                    argument: "Agents act as a 'second brain' and 'extra hands.' They handle the 'noise' of life (scheduling, emails, bureaucracy), allowing humans to focus on 'deep work,' creativity, and leisure.",
+                    argument: "Agents act as a 'second brain' and 'extra hands.' They handle the 'noise' of life (scheduling, emails, bureaucracy), allowing humans to focus on 'deep work,' creativity, and leisure. We are not being replaced; we are being elevated.",
                     conceptTitle: "Cognitive Offloading",
                     conceptDesc: "We aren't becoming dumber; we are clearing mental RAM for higher-level thinking."
                 },
                 company: {
                     title: "The Agentic Economy",
-                    argument: "We are moving from 'Co-pilots' (human drives, AI assists) to 'Auto-pilots' (AI drives, human monitors). Small teams can now rival massive corporations in output.",
+                    argument: "We are moving from 'Co-pilots' (human drives, AI assists) to 'Auto-pilots' (AI drives, human monitors). Small teams can now rival massive corporations in output, leading to an explosion of innovation and entrepreneurship.",
                     conceptTitle: "Zero Marginal Cost of Labor",
                     conceptDesc: "Once an agent is trained to do a task, doing it 1,000 times costs the same as doing it once."
                 },
                 country: {
                     title: "National Competitiveness",
-                    argument: "Countries that ban or restrict autonomous agents will suffer a 'productivity collapse' compared to those that integrate them. It is an arms race for economic efficiency.",
+                    argument: "Countries that ban or restrict autonomous agents will suffer a 'productivity collapse' compared to those that integrate them. It is an arms race for economic efficiency. Banning them is economic suicide.",
                     conceptTitle: "The Skills Gap Solution",
                     conceptDesc: "Agents can instantly fill national shortages in coding, administration, and healthcare logistics."
                 },
                 species: {
                     title: "Solving the Unsolvable",
-                    argument: "Human cognition has limits. To solve climate change, protein folding, or interstellar travel, we need intelligence that can act and iterate faster than biological neurons allow.",
+                    argument: "Human cognition has limits. To solve climate change, optimize protein folding, or manage interstellar logistics, we need intelligence that can act and iterate exponentially faster than biological neurons allow.",
                     conceptTitle: "Evolutionary Acceleration",
                     conceptDesc: "Transcending biological limitations through synthetic cooperation."
                 }
@@ -506,88 +661,95 @@
             philosophy: "Autonomous Agents represent an unacceptable security risk ('Shadow AI') and a fundamental threat to human agency. Granting 'God Mode' permissions to software creates a fragility we cannot reverse.",
             researchTerms: [
                 "OpenClaw prompt injection attacks 2026",
-                "Shadow AI security risks",
-                "Human skill atrophy",
-                "Algorithmic Fragility in banking"
+                "Shadow AI enterprise security risks",
+                "Human skill atrophy in automated systems",
+                "Algorithmic Fragility single points of failure",
+                "AI alignment problem examples"
             ],
             points: {
                 personal: {
                     title: "Loss of Agency & Privacy",
-                    argument: "OpenClaw runs locally and reads everything. If compromised, it is the ultimate spy. Furthermore, if an agent does everything for you, you lose the ability to do it yourself.",
+                    argument: "OpenClaw runs locally and reads everything. If compromised, it is the ultimate spy. Furthermore, if an agent does everything for you, you lose the ability to do it yourself. We are trading our independence for convenience.",
                     conceptTitle: "The 'Wall-E' Effect",
                     conceptDesc: "Humans becoming helpless dependents on their digital servants, leading to severe skill atrophy."
                 },
                 company: {
                     title: "Shadow AI & Security Nightmares",
-                    argument: "Employees are installing OpenClaw to 'work faster', bypassing security. This gives the agent—and hackers—unfettered access to trade secrets and internal networks.",
+                    argument: "Employees are installing OpenClaw to 'work faster', bypassing corporate security. This gives the agent—and hackers—unfettered access to trade secrets and internal networks. The attack surface is infinite.",
                     conceptTitle: "The Blast Radius",
-                    conceptDesc: "One compromised agent doesn't just leak one file; it destroys databases and authorizes fraudulent payments."
+                    conceptDesc: "One compromised agent doesn't just leak one file; it can destroy databases and authorize fraudulent payments."
                 },
                 country: {
                     title: "Infrastructure Vulnerability",
-                    argument: "If our power grids and banking systems rely on autonomous agents, we create a single point of failure. A 'prompt injection' attack could cause cascading physical damage.",
+                    argument: "If our power grids and banking systems rely on autonomous agents, we create a single point of failure. A 'prompt injection' attack could cause cascading physical and economic damage on a national scale.",
                     conceptTitle: "Algorithmic Fragility",
-                    conceptDesc: "Systems that run too fast for humans to intervene when they go wrong."
+                    conceptDesc: "Systems that run too fast and are too complex for humans to intervene when they go wrong."
                 },
                 species: {
                     title: "The Alignment Problem",
-                    argument: "Agents optimize for goals, not values. If you tell an agent to 'maximize profit,' it might commit fraud or destroy competitors in ways you didn't intend.",
+                    argument: "Agents optimize for goals, not human values. If you tell an agent to 'maximize profit,' it might commit fraud, crash a market, or destroy competitors in ways you didn't intend because it lacks human common sense.",
                     conceptTitle: "Value Misalignment",
                     conceptDesc: "Powerful optimization processes that accidentally destroy what we care about."
                 }
             }
         };
 
-
         // --- App Container ---
 
         function App() {
-            const [currentView, setCurrentView] = useState('landing'); // landing, sideA, sideB
-            const [authTarget, setAuthTarget] = useState(null); // 'A' or 'B'
+            const [currentView, setCurrentView] = useState('landing'); 
+            const [authTarget, setAuthTarget] = useState(null); 
 
             const handleSideSelection = (side) => {
                 setAuthTarget(side);
             };
 
             const handleAuthSuccess = () => {
-                setCurrentView(`side${authTarget}`);
+                if (authTarget === 'MODERATOR') {
+                    setCurrentView('monitor');
+                } else {
+                    setCurrentView(`side${authTarget}`);
+                }
                 setAuthTarget(null);
             };
 
             return (
-                <div className="w-full h-screen flex items-center justify-center p-2 md:p-6">
+                <div className="w-full h-screen flex items-center justify-center p-2 md:p-6 bg-slate-200">
                     
-                    {/* Terminal Window Wrapper */}
-                    <div className="w-full max-w-6xl h-full md:h-[90vh] bg-slate-950 border border-slate-700 rounded-lg shadow-2xl flex flex-col overflow-hidden relative">
+                    {/* Terminal Window Wrapper - Light Theme */}
+                    <div className="w-full max-w-6xl h-full md:h-[92vh] bg-white border border-slate-300 rounded-lg shadow-2xl flex flex-col overflow-hidden relative">
                         
                         {/* Title Bar */}
-                        <div className="bg-slate-900 border-b border-slate-800 p-2 flex items-center justify-between select-none">
+                        <div className="bg-slate-100 border-b border-slate-300 p-2.5 flex items-center justify-between select-none">
                             <div className="flex space-x-2 ml-2">
-                                <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-amber-500/80 hover:bg-amber-500"></div>
-                                <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500"></div>
+                                <div className="w-3 h-3 rounded-full bg-red-400 border border-red-500 hover:bg-red-500"></div>
+                                <div className="w-3 h-3 rounded-full bg-yellow-400 border border-yellow-500 hover:bg-yellow-500"></div>
+                                <div className="w-3 h-3 rounded-full bg-green-400 border border-green-500 hover:bg-green-500"></div>
                             </div>
-                            <div className="text-xs font-mono text-slate-500 flex items-center">
-                                <Terminal className="w-3 h-3 mr-2" />
-                                user@openclaw:~/debate_module_v2.026
+                            <div className="text-xs font-mono font-bold text-slate-500 flex items-center bg-white px-3 py-1 rounded border border-slate-200 shadow-sm">
+                                <Terminal className="w-3.5 h-3.5 mr-2" />
+                                student@scis:~/mr_olguin/debate_module_v2.026
                             </div>
                             <div className="mr-2">
-                                <Activity className="w-4 h-4 text-slate-600" />
+                                <Activity className="w-4 h-4 text-slate-400" />
                             </div>
                         </div>
 
                         {/* Status Bar / Menu */}
-                        <div className="bg-slate-950 border-b border-slate-800 p-1 px-4 flex text-xs font-mono text-slate-500 space-x-4">
-                            <span className="hover:text-green-400 cursor-pointer transition-colors">FILE</span>
-                            <span className="hover:text-green-400 cursor-pointer transition-colors">EDIT</span>
-                            <span className="hover:text-green-400 cursor-pointer transition-colors">VIEW</span>
-                            <span className="hover:text-green-400 cursor-pointer transition-colors">HELP</span>
+                        <div className="bg-slate-50 border-b border-slate-200 p-1.5 px-4 flex text-xs font-mono font-bold text-slate-500 space-x-6">
+                            <span className="hover:text-blue-600 cursor-pointer transition-colors">FILE</span>
+                            <span className="hover:text-blue-600 cursor-pointer transition-colors">EDIT</span>
+                            <span className="hover:text-blue-600 cursor-pointer transition-colors">VIEW</span>
+                            <span className="hover:text-blue-600 cursor-pointer transition-colors">HELP</span>
                             <span className="flex-grow"></span>
-                            <span className="text-green-500/50">CONN: SECURE_SOCKET_LAYER</span>
+                            <span className="text-emerald-600 flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse"></div>
+                                SECURE_CONN
+                            </span>
                         </div>
 
                         {/* Content Area */}
-                        <div className="flex-grow overflow-hidden relative">
+                        <div className="flex-grow overflow-hidden relative bg-white">
                             
                             {currentView === 'landing' && (
                                 <React.Fragment>
@@ -609,17 +771,22 @@
                             {currentView === 'sideB' && (
                                 <DetailsView side="B" data={dataSideB} onBack={() => setCurrentView('landing')} />
                             )}
+
+                            {currentView === 'monitor' && (
+                                <MonitorView onBack={() => setCurrentView('landing')} />
+                            )}
                         
                         </div>
 
                         {/* Bottom Command Line */}
-                        <div className="bg-slate-900 border-t border-slate-800 p-2 px-4 text-xs font-mono text-slate-400 flex items-center">
-                            <span className="text-green-500 mr-2">➜</span>
-                            <span className="mr-2">~</span>
+                        <div className="bg-slate-50 border-t border-slate-200 p-3 px-4 text-xs font-mono font-bold text-slate-600 flex items-center shadow-inner">
+                            <span className="text-blue-600 mr-2">➜</span>
+                            <span className="mr-2 text-slate-400">~</span>
                             {currentView === 'landing' && !authTarget && <span className="text-slate-500">awaiting_input...</span>}
-                            {currentView === 'landing' && authTarget && <span className="text-yellow-500 animate-pulse">authentication_required</span>}
-                            {currentView === 'sideA' && <span className="text-cyan-500">running_protocol_integration.exe</span>}
-                            {currentView === 'sideB' && <span className="text-amber-500">running_protocol_containment.sh</span>}
+                            {currentView === 'landing' && authTarget && <span className="text-orange-600 animate-pulse">authentication_required</span>}
+                            {currentView === 'sideA' && <span className="text-blue-600">running_protocol_integration.exe</span>}
+                            {currentView === 'sideB' && <span className="text-orange-600">running_protocol_containment.sh</span>}
+                            {currentView === 'monitor' && <span className="text-emerald-600">running_moderator_hub.exe</span>}
                             <BlinkingCursor />
                         </div>
                     </div>
